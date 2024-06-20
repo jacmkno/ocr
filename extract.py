@@ -1,4 +1,8 @@
 
+from ocr import PDFProcessor
+
 def extract(file_path):
-    # Placeholder function to return an empty array
+    processor = PDFProcessor(file_path)
+    processor.process_pdf()
+    processor.print_elements()
     return []
