@@ -10,6 +10,7 @@ def test():
 
     # Extract texts from the PDF
     extracted_texts = extract.extract(result['file_path'])
+    print("Extracted Texts:", extracted_texts)
 
     # Calculate the percentage of matched texts
     matched_texts = [text for text in generated_texts if text in extracted_texts]

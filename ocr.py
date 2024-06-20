@@ -4,6 +4,7 @@ import pdfplumber
 import pytesseract
 from PIL import Image
 import camelot
+import io  # Correct import
 
 class PDFElement:
     def __init__(self, element_type, content, bbox, page_number):
@@ -49,17 +50,14 @@ class PDFProcessor:
                 self.classify_and_add_element('text', block_text.strip(), bbox, page_number)
 
     def extract_images(self, page, page_number):
-        for img in page.images:
-            img_bbox = (img['x0'], img['top'], img['x1'], img['bottom'])
-            img_data = page.within_bbox(img_bbox).to_image(resolution=300).image
-            img_content = pytesseract.image_to_string(Image.fromarray(img_data))
+        image_list = page.get_images(full=True)
+        for img_index, img in enumerate(image_list):
+            xref = img[0]
+            base_image = self.pdf_document.extract_image(xref)
+            image_bytes = base_image["image"]
+            img_bbox = (img[1], img[2], img[3], img[4])
+            img_content = pytesseract.image_to_string(Image.open(io.BytesIO(image_bytes)))
             self.classify_and_add_element('image', img_content, img_bbox, page_number)
-
-    def extract_tables(self, page_number):
-        tables = camelot.read_pdf(self.pdf_path, pages=str(page_number))
-        for table in tables:
-            table_bbox = (0, 0, 0, 0)  # Camelot does not provide bbox, default to (0,0,0,0)
-            self.classify_and_add_element('table', table.df.to_json(), table_bbox, page_number)
 
     def process_page(self, page, page_number):
         page_elements = []
@@ -70,8 +68,8 @@ class PDFProcessor:
         # Extract images
         self.extract_images(page, page_number)
 
-        # Extract tables
-        self.extract_tables(page_number)
+        # Not calling extract_tables to avoid Ghostscript dependency
+        # self.extract_tables(page_number)
 
     def process_pdf(self):
         self.load_pdfs()
@@ -81,6 +79,9 @@ class PDFProcessor:
             self.process_page(pdf_page, page_number)
 
         self.close_pdfs()
+
+        # Return all extracted texts
+        return [element.content for element in self.elements]
 
     def print_elements(self):
         for element in self.elements:
