@@ -42,7 +42,7 @@ To run this project on Google Colab, you need to install the following dependenc
 
 ## Run in Chat GPT:
 
-Attach the zip of the repo with this message: "Unzip this in your python environment and then run test.py and give me the output, bot stdout and stderr..." 
+Attach the zip of the repo with this message: "Unzip this in your python environment and then run test.py and give me the output, both stdout and stderr..." 
 
 ## Files
 
