@@ -81,7 +81,7 @@ class PDFProcessor:
         self.close_pdfs()
 
         # Return all extracted texts
-        return [element.content for element in self.elements]
+        return [element.content.trim() for element in self.elements]
 
     def print_elements(self):
         for element in self.elements:
