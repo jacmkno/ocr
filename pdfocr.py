@@ -57,6 +57,7 @@ class PDFProcessor:
             image_bytes = base_image["image"]
             img_bbox = (img[1], img[2], img[3], img[4])
             img_content = pytesseract.image_to_string(Image.open(io.BytesIO(image_bytes)))
+            print("IMGE: %s"%img_content)
             self.classify_and_add_element('image', img_content, img_bbox, page_number)
 
     def process_page(self, page, page_number):
