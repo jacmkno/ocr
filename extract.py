@@ -1,5 +1,5 @@
 
-from ocr import PDFProcessor
+from pdfocr import PDFProcessor
 
 def extract(file_path):
     processor = PDFProcessor(file_path)
