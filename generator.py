@@ -49,7 +49,7 @@ def generatePDF():
 
         # Save the image
         img.save(image_path)
-        texts.append(text)
+        #texts.append(text)
 
     # Paths for images
     image_path1 = "image_with_text1.png"
