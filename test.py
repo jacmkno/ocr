@@ -1,4 +1,5 @@
 import Levenshtein
+import pdfocr
 
 def compare(generated_texts, extracted_texts):
     # Join the lists of texts into single strings
@@ -23,22 +24,28 @@ def compare(generated_texts, extracted_texts):
 import generator
 import extract
 
-def test():
+def test(file=None, lang=None):
     # Generate the PDF and get the texts
-    result = generator.generatePDF()
-    generated_texts = result['texts']
-    print("Generated Texts:", generated_texts)
+    if not file:
+        result = generator.generatePDF()
+        generated_texts = result['texts']
+        print("Generated Texts:", generated_texts)
 
-    # Extract texts from the PDF
-    extracted_texts = extract.extract(result['file_path'])
-    print("Extracted Texts:", extracted_texts)
+        # Extract texts from the PDF
+        extracted_texts = extract.extract(result['file_path'])
+        print("Extracted Texts:", extracted_texts)
 
-    result, ratio, additions, deletions, substitutions = compare(generated_texts, extracted_texts)
-    print(result)
-    print(f"Ratio: {ratio}%")
-    print(f"Deletions: {additions}%")
-    print(f"Additions: {deletions}%")
-    print(f"Substitutions: {substitutions}%")
-
+        result, ratio, additions, deletions, substitutions = compare(generated_texts, extracted_texts)
+        print(result)
+        print(f"Ratio: {ratio}%")
+        print(f"Deletions: {additions}%")
+        print(f"Additions: {deletions}%")
+        print(f"Substitutions: {substitutions}%")
+    else:
+        print("Extracted Texts:", extract.extract(file, lang))
+        
 if __name__ == "__main__":
-    test()
+    #test()
+    test('real.pdf', 'spa')
+    #print([l for l in pdfocr.PDFProcessor.langs()])
+    
